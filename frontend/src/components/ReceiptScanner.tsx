@@ -23,7 +23,6 @@ const ReceiptScanner: React.FC = () => {
   const [scanResult, setScanResult] = useState<ReceiptScanResult | null>(null);
   const [receiptDate, setReceiptDate] = useState<string>("");
   const [receiptTotal, setReceiptTotal] = useState<number | null>(null);
-  const [croppedPreviewUrl, setCroppedPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -67,7 +66,6 @@ const ReceiptScanner: React.FC = () => {
     setError(null);
     setScanResult(null);
     setEditableItems([]);
-    setCroppedPreviewUrl(null);
 
     const file = event.target.files?.[0];
     if (!file) return;
@@ -92,7 +90,6 @@ const ReceiptScanner: React.FC = () => {
           qty: item.qty || 1,
         })),
       );
-      setCroppedPreviewUrl(result.croppedImage || null);
     } catch (err: any) {
       console.error("Error scanning receipt", err);
       const resp = err?.response?.data;
@@ -115,7 +112,6 @@ const ReceiptScanner: React.FC = () => {
     setReceiptDate("");
     setReceiptTotal(null);
     setEditableItems([]);
-    setCroppedPreviewUrl(null);
     setError(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -150,7 +146,7 @@ const ReceiptScanner: React.FC = () => {
     return editableItems.reduce((sum, item) => sum + (item.price || 0) * (item.qty || 1), 0);
   }, [editableItems]);
 
-  const storeName = scanResult ? scanResult.store || scanResult.merchant : "Tidak terdeteksi";
+  const storeName = scanResult ? scanResult.store : "Tidak terdeteksi";
   const receiptDateDisplayed = receiptDate;
 
   const handleSaveTransactions = async () => {
@@ -186,7 +182,6 @@ const ReceiptScanner: React.FC = () => {
       }
 
       setScanResult(null);
-      setCroppedPreviewUrl(null);
       setEditableItems([]);
       setSelectedFile(null);
       setPreviewUrl(null);
@@ -243,15 +238,6 @@ const ReceiptScanner: React.FC = () => {
                 <img src={previewUrl} alt="Receipt preview" style={{ width: "100%", display: "block" }} />
               </div>
             </div>
-
-            {croppedPreviewUrl && (
-              <div style={{ flex: 1, maxWidth: 360 }}>
-                <div className="mb-2 text-muted small">Preview Crop (area struk)</div>
-                <div className="border rounded-3 overflow-hidden" style={{ background: "#f7f9fc" }}>
-                  <img src={croppedPreviewUrl} alt="Cropped receipt" style={{ width: "100%", display: "block" }} />
-                </div>
-              </div>
-            )}
 
             <div style={{ flex: 2 }}>
               {scanResult && (

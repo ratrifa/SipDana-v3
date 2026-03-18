@@ -1,57 +1,44 @@
 ﻿import { Response } from "express";
-import axios from "axios";
-import FormData from "form-data";
 import { AuthRequest } from "../middleware/auth.middleware";
+import { scanReceiptWithGemini } from "../services/geminiService";
 
 /**
- * [POST] Scan receipt image by proxying the call to an n8n webhook.
- * Endpoint: POST /api/receipt/scan-receipt
+ * [POST] Scan receipt image using Google Gemini.
+ * Endpoint: POST /api/scan-receipt (or /api/receipt/scan-receipt)
  */
 export const scanReceipt = async (req: AuthRequest, res: Response) => {
   const file = (req as any).file;
+  const base64Image = (req as any).body?.base64 || (req as any).body?.image;
 
-  if (!file) {
-    return res.status(400).json({ message: "Gambar struk tidak ditemukan. Pastikan Anda meng-upload file." });
+  if (!file && !base64Image) {
+    return res.status(400).json({
+      message: "No receipt image provided. Upload a file or send base64 image data.",
+    });
   }
 
   try {
-    const n8nUrl = process.env.N8N_SCAN_RECEIPT_URL || "http://localhost:5678/webhook/scan-receipt";
+    let imageBuffer: Buffer;
+    let mimeType = "image/jpeg";
 
-    const form = new FormData();
-    form.append("data", file.buffer, { filename: file.originalname, contentType: file.mimetype });
+    if (file) {
+      imageBuffer = file.buffer;
+      mimeType = file.mimetype || mimeType;
+    } else {
+      const match = /^data:(.+);base64,(.+)$/.exec(base64Image);
+      if (match) {
+        mimeType = match[1] || mimeType;
+        imageBuffer = Buffer.from(match[2], "base64");
+      } else {
+        imageBuffer = Buffer.from(base64Image, "base64");
+      }
+    }
 
-    const response = await axios.post(n8nUrl, form, {
-      headers: {
-        ...form.getHeaders(),
-      },
-      timeout: 90000,
-    });
-
-    return res.json(response.data);
+    const parsedReceipt = await scanReceiptWithGemini(imageBuffer, mimeType);
+    return res.json(parsedReceipt);
   } catch (error: any) {
-    const n8nUrl = process.env.N8N_SCAN_RECEIPT_URL || "http://localhost:5678/webhook/scan-receipt";
-    const status = error?.response?.status;
-    const n8nMessage = error?.response?.data?.message;
-
-    console.error("Error scanReceipt (n8n):", {
-      status,
-      n8nUrl,
-      n8nMessage,
-      error: error?.message || error,
-    });
-
-    const message = n8nMessage || error?.message || "Gagal melakukan scan struk. Coba lagi.";
-
-    const advice =
-      status === 404
-        ? `Pastikan workflow n8n memiliki Webhook node dengan path yang cocok (URL yang digunakan: ${n8nUrl}).` // eslint-disable-line max-len
-        : undefined;
-
+    console.error("Error scanReceipt (Gemini):", error);
     return res.status(500).json({
-      message,
-      ...(advice ? { advice } : {}),
-      n8nUrl,
-      status,
+      message: error?.message || "Gagal melakukan scan struk. Coba lagi.",
     });
   }
 };
