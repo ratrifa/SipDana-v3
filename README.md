@@ -14,6 +14,31 @@
 
 ---
 
+## ✨ Fitur Utama (End-to-End)
+
+1. **AI Receipt Scanner (Scan Struk Otomatis):**
+   - Unggah gambar struk belanja; sistem mengekstrak item, harga, dan total menggunakan Google Gemini (AI).
+   - Simpan hasil pemindaian langsung sebagai transaksi dalam kategori yang dipilih.
+2. **Sistem Autentikasi Ketat:**
+   - Registrasi dengan validasi password (Min. 8 karakter, Huruf Kapital, Angka).
+   - Login berbasis JWT (JSON Web Token) untuk keamanan sesi.
+3. **Dashboard Finansial:**
+   - Ringkasan saldo kumulatif, total pemasukan, dan pengeluaran bulan berjalan.
+   - Grafik tren keuangan interaktif menggunakan Chart.js.
+4. **Manajemen Transaksi:**
+   - Pencatatan pemasukan dan pengeluaran dengan kategori yang spesifik.
+   - Update saldo otomatis secara real-time menggunakan sistem _database transaction_.
+5. **Target Menabung (Saving Goals):**
+   - Membuat target tabungan spesifik dengan tenggat waktu.
+   - Alokasi saldo virtual ke target tertentu untuk memantau progres persentase.
+6. **Analisis Keuangan & Rekomendasi:**
+   - Penghitungan Neto otomatis.
+   - Rekomendasi metode pengelolaan keuangan (seperti _50/30/20 Rule_ atau _Pay Yourself First_) berdasarkan kondisi keuangan user.
+7. **Pengaturan Akun:**
+   - Update profil (Username & Email) serta perubahan kata sandi dengan validasi keamanan tinggi.
+
+---
+
 ## 📌 Prasyarat
 
 - Node.js (v18+ direkomendasikan)
@@ -25,7 +50,7 @@
 
 ## 🔧 Konfigurasi `.env` (Backend)
 
-Salin file `backend/.env` ke `backend/.env` (jika belum ada) dan sesuaikan nilai-nilai berikut:
+Buat file `backend/.env` (jika belum ada) dan tambahkan nilai-nilai berikut:
 
 ```env
 PORT=5000
@@ -35,7 +60,7 @@ DB_PASSWORD=
 DB_NAME=sip_dana
 JWT_SECRET=rahasia_super_aman_sipdana
 
-# Kunci API Google Gemini (opsional)
+# Kunci API Google Gemini (opsional; diperlukan untuk fitur AI Receipt Scanner)
 # GEMINI_API_KEY=your_google_api_key
 # GEMINI_MODEL=gemini-2.5-flash
 ```
