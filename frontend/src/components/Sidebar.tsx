@@ -22,7 +22,11 @@ import TargetBlue from '../assets/IconTargetBiru.svg';
 import SettingsWhite from '../assets/IconPengaturan.svg';
 import SettingsBlue from '../assets/IconPengaturanBiru.svg';
 
-const Sidebar = () => {
+interface SidebarProps {
+  onItemClick?: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onItemClick }) => {
   const location = useLocation();
   
   // Array untuk menu navigasi
@@ -53,6 +57,12 @@ const Sidebar = () => {
   
   const isActive = (path: string) => location.pathname === path;
 
+  const handleItemClick = () => {
+    if (onItemClick) {
+      onItemClick();
+    }
+  };
+
   return (
     <div 
       style={{ 
@@ -64,7 +74,7 @@ const Sidebar = () => {
         padding: '20px 0 20px 0', 
         overflowY: 'auto', 
       }}
-      className="d-flex flex-column shadow" 
+      className="d-flex flex-column shadow sidebar-responsive" 
     >
       
       <div className="d-flex align-items-center justify-content-center mb-5 mt-3">
@@ -72,7 +82,7 @@ const Sidebar = () => {
           src={LogoPutih} 
           alt="SipDana Logo" 
           style={{ width: '250px' }} 
-          className="px-4" 
+          className="px-4 logo-responsive" 
         />
       </div>
       
@@ -82,7 +92,8 @@ const Sidebar = () => {
             as={Link} 
             to={item.to} 
             key={item.to}
-            className={`d-flex align-items-center mb-2 p-3 rounded text-white ${isActive(item.to) ? 'bg-white fw-bold' : 'text-white'}`}
+            onClick={handleItemClick}
+            className={`d-flex align-items-center mb-2 p-3 rounded text-white nav-item-responsive ${isActive(item.to) ? 'bg-white fw-bold' : 'text-white'}`}
             style={{ 
                 backgroundColor: isActive(item.to) ? 'white' : 'transparent',
                 transition: '0.3s',
@@ -94,7 +105,7 @@ const Sidebar = () => {
                 className="me-3" 
                 style={{ width: '20px', height: '20px', filter: 'none' }}
             />
-            <span className={isActive(item.to) ? 'text-primary' : 'text-white'}>
+            <span className={`nav-label-responsive ${isActive(item.to) ? 'text-primary' : 'text-white'}`}>
                 {item.label}
             </span>
           </Nav.Link>
@@ -108,7 +119,8 @@ const Sidebar = () => {
             as={Link} 
             to={settingsItem.to} 
             key={settingsItem.to}
-            className={`d-flex align-items-center mb-2 p-3 rounded text-white ${isActive(settingsItem.to) ? 'bg-white fw-bold' : 'text-white'}`}
+            onClick={handleItemClick}
+            className={`d-flex align-items-center mb-2 p-3 rounded text-white nav-item-responsive ${isActive(settingsItem.to) ? 'bg-white fw-bold' : 'text-white'}`}
             style={{ 
                 backgroundColor: isActive(settingsItem.to) ? 'white' : 'transparent',
                 transition: '0.3s',
@@ -120,7 +132,7 @@ const Sidebar = () => {
                 className="me-3" 
                 style={{ width: '20px', height: '20px', filter: 'none' }}
             />
-            <span className={isActive(settingsItem.to) ? 'text-primary' : 'text-white'}>
+            <span className={`nav-label-responsive ${isActive(settingsItem.to) ? 'text-primary' : 'text-white'}`}>
                 {settingsItem.label}
             </span>
           </Nav.Link>
@@ -131,3 +143,5 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+      
+     

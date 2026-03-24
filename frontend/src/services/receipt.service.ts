@@ -1,31 +1,14 @@
 export interface ReceiptItem {
   name: string;
-  qty?: number;
+  qty: number;
   price: number;
 }
 
 export interface ReceiptScanResult {
   store: string;
-  merchant: string; // kept for backwards compatibility
   date?: string;
   items: ReceiptItem[];
   total: number;
-  rawText?: string;
-  croppedImage?: string; // Optional, can be used by UI if available
-}
-
-interface N8nReceiptItem {
-  name: string;
-  quantity: number;
-  unit_price: number;
-  total_price: number;
-}
-
-interface N8nReceiptResponse {
-  store_name: string;
-  transaction_date: string;
-  items: N8nReceiptItem[];
-  total_payment: number;
 }
 
 export const scanReceipt = async (file: File): Promise<ReceiptScanResult> => {
@@ -49,36 +32,27 @@ export const scanReceipt = async (file: File): Promise<ReceiptScanResult> => {
   }
 
   const json = (await res.json()) as unknown;
-
-  // n8n can return either an array (default) or a single object depending on how the workflow is configured.
-  const payload = Array.isArray(json) && json.length ? json[0] : json;
-
-  if (!payload || typeof payload !== "object") {
-    throw new Error(`Invalid response format from scan service. Expected object or array; got: ${JSON.stringify(json)}`);
+  if (!json || typeof json !== "object") {
+    throw new Error(`Invalid response format from scan service. Received: ${JSON.stringify(json)}`);
   }
 
-  const store = (payload as any).store_name || (payload as any).store || (payload as any).merchant || "";
-  const date = (payload as any).transaction_date || (payload as any).date;
-  const total = (payload as any).total_payment || (payload as any).total || (payload as any).amount;
+  const payload = json as any;
 
-  const rawItems = (payload as any).items || (payload as any).line_items || (payload as any).products;
+  const store = typeof payload.store === "string" ? payload.store : "";
+  const date = typeof payload.date === "string" ? payload.date : undefined;
+  const total = typeof payload.total === "number" ? payload.total : Number(payload.total) || 0;
 
-  if (!store || !rawItems || !Array.isArray(rawItems)) {
-    throw new Error(`Scan service returned unexpected data format. Received: ${JSON.stringify(payload)}`);
-  }
-
-  const items: ReceiptItem[] = rawItems.map((item: any) => ({
-    name: item.name || item.product || item.description || "",
-    qty: item.quantity || item.qty || item.count,
-    price: item.unit_price || item.price || item.amount || 0,
+  const itemsRaw = Array.isArray(payload.items) ? payload.items : [];
+  const items: ReceiptItem[] = itemsRaw.map((item: any) => ({
+    name: typeof item?.name === "string" ? item.name : "",
+    qty: typeof item?.qty === "number" ? item.qty : Number(item?.qty) || 0,
+    price: typeof item?.price === "number" ? item.price : Number(item?.price) || 0,
   }));
 
   return {
     store,
-    merchant: store,
     date,
     items,
-    total: typeof total === "number" ? total : Number(total) || 0,
-    rawText: JSON.stringify(payload),
+    total,
   };
 };
