@@ -60,13 +60,639 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #f4f7f6;
+}
+
+.sidebar-panel {
+  width: 280px;
+  min-width: 280px;
+  border-right: 1px solid #e0e0e0;
+  z-index: 10;
+  background-color: #ffffff;
+}
+
+.content-panel {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+
+.main-panel {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.history-panel {
+  width: 350px;
+  min-width: 350px;
+  border-left: 1px solid #e0e0e0;
+  background-color: #eef7ff;
+}
+
+.transaction-history-wrapper {
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+/* ======================================= */
+/* 4. RESPONSIVE LAYOUT STYLES */
+/* ======================================= */
+
+.app-layout-responsive {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.sidebar-wrapper {
+  width: 280px;
+  min-width: 280px;
+  border-right: 1px solid #e0e0e0;
+  background-color: #007bff;
+  position: relative;
+  z-index: 1000;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+/* Desktop: show sidebar */
+@media (min-width: 1024px) {
+  .sidebar-wrapper {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 280px !important;
+    height: auto !important;
+    max-height: none !important;
+    transform: none !important;
+    transition: none !important;
+    border: none;
+  }
+}
+
+.main-content-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.history-panel-wrapper {
+  position: relative;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+.history-drawer {
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Slide animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    max-height: 85vh;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    max-height: 85vh;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+/* ======================================= */
+/* 5. RESPONSIVE BREAKPOINTS */
+/* ======================================= */
+
+/* Desktop (1024px and above) - Full 3-column layout */
+@media (min-width: 1024px) {
+  .app-layout-responsive {
+    flex-direction: row;
+  }
+
+  .sidebar-wrapper {
+    display: block !important;
+    position: relative;
+    border: none;
+  }
+
+  .sidebar-overlay {
+    display: none !important;
+  }
+
+  .sidebar-close-btn {
+    display: none !important;
+  }
+
+  .history-drawer {
+    display: none !important;
+  }
+
+  .history-drawer-overlay {
+    display: none !important;
+  }
+
+  .history-toggle-btn {
+    display: none !important;
+  }
+
+  .main-content-wrapper {
+    padding: 20px !important;
+  }
+
+  .sidebar-responsive {
+    width: 280px;
+    min-width: 280px;
+    padding: 20px 0;
+  }
+
+  .sidebar-responsive .logo-responsive {
+    width: 250px;
+  }
+
+  .sidebar-responsive .nav-item-responsive {
+    padding: 12px 16px;
+    margin-bottom: 8px;
+  }
+
+  .sidebar-responsive .nav-label-responsive {
+    font-size: 14px;
+  }
+}
+
+/* Tablet (768px to 1023px) - Hamburger menu + collapsible sidebar */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .app-layout-responsive {
+    flex-direction: column;
+  }
+
+  .sidebar-wrapper {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    border: none;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow-y: auto;
+  }
+
+  .sidebar-wrapper.sidebar-open {
+    display: block;
+    transform: translateX(0);
+  }
+
+  .history-drawer {
+    display: none;
+  }
+
+  .history-panel-wrapper {
+    display: block;
+    width: 100%;
+    max-height: none;
+    border: 1px solid #e0e0e0;
+    border-top: 1px solid #e0e0e0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .main-content-wrapper {
+    padding: 16px;
+  }
+}
+
+/* Mobile (under 768px) - Full responsive single column */
+@media (max-width: 767px) {
+  .app-layout-responsive {
+    flex-direction: column;
+  }
+
+  .sidebar-wrapper {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 280px !important;
+    height: 100vh !important;
+    border: none !important;
+    z-index: 1000 !important;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow-y: auto !important;
+    max-height: 100vh !important;
+  }
+
+  .sidebar-wrapper.sidebar-open {
+    transform: translateX(0) !important;
+  }
+
+  .sidebar-close-btn {
+    display: block !important;
+  }
+
+  .sidebar-overlay {
+    display: block !important;
+  }
+
+  .header-hamburger-btn {
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .history-toggle-btn {
+    display: inline-block !important;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .history-panel-wrapper {
+    display: none !important;
+  }
+
+  .history-drawer {
+    display: block;
+    z-index: 1003;
+  }
+
+  .main-content-wrapper {
+    padding: 12px;
+    min-height: auto;
+  }
+
+  .main-content-wrapper > * {
+    width: 100%;
+  }
+
+  .sidebar-responsive {
+    width: 100%;
+    padding: 20px 0;
+  }
+
+  .sidebar-responsive .logo-responsive {
+    width: 200px;
+  }
+
+  .sidebar-responsive .nav-item-responsive {
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+  }
+
+  .sidebar-responsive .nav-label-responsive {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* Form responsiveness on mobile */
+  .form-control,
+  .form-select {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  .btn {
+    min-height: 44px;
+    padding: 12px 16px;
+    font-size: 16px;
+  }
+
+  /* Card responsiveness */
+  .card {
+    border-radius: 12px;
+    margin-bottom: 12px;
+    padding: 12px;
+  }
+
+  /* Modal responsiveness */
+  .modal-content {
+    border-radius: 16px 16px 0 0;
+  }
+
+  .modal-dialog {
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .modal-body {
+    padding: 16px;
+  }
+
+  .modal-header {
+    padding: 16px;
+  }
+
+  .modal-footer {
+    padding: 12px 16px;
+  }
+}
+
+/* Very small mobile (under 576px) */
+@media (max-width: 575px) {
+  .app-layout-responsive {
+    flex-direction: column;
+  }
+
+  .main-content-wrapper {
+    padding: 8px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  h3 {
+    font-size: 18px;
+  }
+
+  h4, h5, h6 {
+    font-size: 16px;
+  }
+
+  .form-control,
+  .form-select {
+    padding: 10px 12px;
+    font-size: 14px;
+    min-height: 40px;
+  }
+
+  .btn {
+    min-height: 40px;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .card {
+    padding: 8px;
+  }
+
+  .container,
+  .container-fluid {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+
+/* Landscape mobile (height constrained) */
+@media (max-height: 500px) {
+  .sidebar-wrapper {
+    height: 100vh;
+  }
+
+  .history-drawer {
+    max-height: 80vh !important;
+  }
+}
+
 /* Pastikan Heading juga memakai Inter */
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Inter', sans-serif;
 }
 
+/* ======================================= */
+/* 6. ADDITIONAL RESPONSIVE UTILITIES */
+/* ======================================= */
+
 .back-button-wrapper:hover {
   background-color: #f8f9fa !important; /* Warna abu muda saat hover */
   transform: translateX(-5px); /* Geser sedikit ke kiri saat hover */
   box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+}
+
+/* Responsive utilities for cards */
+.card-responsive {
+  border-radius: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-responsive:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1) !important;
+}
+
+/* Responsive Row spacing */
+.row-responsive {
+  gap: 16px;
+}
+
+@media (max-width: 767px) {
+  .row-responsive {
+    gap: 12px;
+  }
+}
+
+/* Responsive container */
+.container-responsive {
+  padding: 16px;
+  max-width: 100%;
+}
+
+@media (min-width: 768px) {
+  .container-responsive {
+    padding: 20px;
+  }
+}
+
+/* Touch-friendly input sizes */
+.form-control-responsive,
+.form-select-responsive {
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  .form-control-responsive,
+  .form-select-responsive {
+    min-height: 38px;
+    font-size: 16px;
+  }
+}
+
+/* Button responsive sizing */
+.btn-responsive {
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .btn-responsive {
+    min-height: auto;
+    padding: 8px 16px;
+  }
+}
+
+.btn-responsive:active {
+  transform: scale(0.98);
+}
+
+/* Text responsive sizing */
+.text-responsive-h1 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+@media (min-width: 768px) {
+  .text-responsive-h1 {
+    font-size: 32px;
+  }
+}
+
+.text-responsive-h2 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+@media (min-width: 768px) {
+  .text-responsive-h2 {
+    font-size: 24px;
+  }
+}
+
+.text-responsive-h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .text-responsive-h3 {
+    font-size: 20px;
+  }
+}
+
+/* Responsive gap utilities */
+.gap-responsive-sm {
+  gap: 8px;
+}
+
+.gap-responsive-md {
+  gap: 12px;
+}
+
+.gap-responsive-lg {
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .gap-responsive-sm {
+    gap: 12px;
+  }
+
+  .gap-responsive-md {
+    gap: 16px;
+  }
+
+  .gap-responsive-lg {
+    gap: 20px;
+  }
+}
+
+/* Padding responsive utilities */
+.p-responsive {
+  padding: 12px;
+}
+
+@media (min-width: 768px) {
+  .p-responsive {
+    padding: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .p-responsive {
+    padding: 20px;
+  }
+}
+
+/* Margin responsive utilities */
+.mb-responsive {
+  margin-bottom: 12px;
+}
+
+@media (min-width: 768px) {
+  .mb-responsive {
+    margin-bottom: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mb-responsive {
+    margin-bottom: 20px;
+  }
+}
+
+/* Image responsive */
+.img-responsive-full {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Scroll smooth behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for better mobile UX */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
