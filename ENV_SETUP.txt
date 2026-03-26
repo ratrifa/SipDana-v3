@@ -1,0 +1,59 @@
+# DEPLOYMENT CREDENTIALS TEMPLATE
+# Simpan file ini LOKAL saja, jangan commit ke GitHub!
+
+## PLANETSCALE DATABASE
+# Dari: https://planetscale.com → sipdana database → Connect → MySQL client
+
+DB_HOST=xxxxx.mysql.database.azure.com
+DB_USER=xxxxx
+DB_PASSWORD=xxxxx
+DB_NAME=sipdana
+
+## GOOGLE GEMINI API
+# Dari: https://aistudio.google.com/apikey
+
+GEMINI_API_KEY=xxxxx
+
+## JWT SECRET (Generate baru)
+# Gunakan: openssl rand -base64 32
+
+JWT_SECRET=xxxxx
+
+## VERCEL URLs (Setelah deploy)
+# Backend URL (contoh)
+BACKEND_URL=https://sipdana-backend.vercel.app
+
+# Frontend URL (contoh)
+FRONTEND_URL=https://sipdana.vercel.app
+
+## UNTUK DIISI DI ENVIRONMENT VARIABLES:
+
+### VERCEL BACKEND PROJECT
+```
+DB_HOST=xxxxx.mysql.database.azure.com
+DB_USER=xxxxx
+DB_PASSWORD=xxxxx
+DB_NAME=sipdana
+JWT_SECRET=xxxxx
+GEMINI_API_KEY=xxxxx
+FRONTEND_URL=https://sipdana.vercel.app
+```
+
+### VERCEL FRONTEND PROJECT
+```
+VITE_API_URL=https://sipdana-backend.vercel.app/api
+```
+
+## TESTING CHECKLIST SETELAH DEPLOY
+
+1. Backend Health Check:
+   curl https://sipdana-backend.vercel.app/api/health
+   
+2. Login Test:
+   - URL: https://sipdana.vercel.app
+   - Username: Reyhan
+   - Password: (lihat di sip_dana.sql - passwordnya di hash bcrypt)
+   
+3. Create Transaction:
+   - Buka dashboard, coba add transaction
+   - Check di PlanetScale IDE jika data masuk
