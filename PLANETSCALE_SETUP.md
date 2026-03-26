@@ -1,11 +1,19 @@
-# 🆓 SETUP DATABASE GRATIS - PlanetScale
+# ⚠️ PlanetScale - NO LONGER FREE (ARCHIVED)
 
-## **Kenapa PlanetScale?**
-✅ MySQL compatible (sesuai dengan project Anda)  
-✅ **Selamanya gratis** (tidak ada credit expiry)  
-✅ Unlimited queries & storage (free tier)  
-✅ Perfect untuk Vercel deployment  
-✅ Support untuk production app
+**Update 2024:** PlanetScale sudah menghapus free tier. 
+
+**👉 Gunakan alternatif gratis lainnya:**
+- **db4free.net** - MySQL gratis selamanya (RECOMMENDED)
+- **Vercel Postgres** - PostgreSQL gratis, integrated dengan Vercel
+- **Railway** - $5/month free tier
+- **Upstash MySQL** - MySQL serverless gratis
+
+📖 Lihat: [DATABASE_FREE_OPTIONS.md](DATABASE_FREE_OPTIONS.md) untuk semua pilihan.
+
+---
+
+## **ARCHIVE: Old PlanetScale Setup Guide**
+Dokumentasi ini disimpan untuk referensi, tapi **TIDAK LAGI APPLICABLE** karena no free tier.
 
 ---
 
