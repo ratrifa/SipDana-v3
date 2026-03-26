@@ -1,5 +1,7 @@
 # 🆓 DATABASE GRATIS - PILIHAN TERBAIK 2024
 
+**ATAU LIHAT:** [VERCEL_ALLINONE.md](VERCEL_ALLINONE.md) - Untuk **Semuanya di Vercel** (Frontend + Backend + Database) ⭐ RECOMMENDED
+
 Karena PlanetScale sudah tidak ada free tier, berikut alternatif yang **benar-benar gratis & production-ready**:
 
 ---
